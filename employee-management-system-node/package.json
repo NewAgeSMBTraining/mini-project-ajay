@@ -1,0 +1,45 @@
+{
+  "name": "employee-management-system-node",
+  "version": "1.0.0",
+  "description": "employee management application",
+  "main": "index.js",
+  "scripts": {
+    "start": "node ./dist/app.js",
+    "dev": "babel-node -x .ts ./src/app.ts",
+    "clean": "rimraf ./dist",
+    "build": "babel ./src -x .ts --out-dir ./dist",
+    "prod": "npm-run-all clean build start"
+  },
+  "author": "Ajay K",
+  "license": "ISC",
+  "dependencies": {
+    "@types/bcrypt": "^5.0.0",
+    "@types/cors": "^2.8.12",
+    "@types/express": "^4.17.13",
+    "@types/jsonwebtoken": "^8.5.5",
+    "@types/morgan": "^1.9.3",
+    "@types/nodemailer": "^6.4.4",
+    "@types/validator": "^13.6.4",
+    "bcrypt": "^5.0.1",
+    "cors": "^2.8.5",
+    "dotenv": "^10.0.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "mongoose": "^6.0.12",
+    "morgan": "^1.10.0",
+    "nodemailer": "^6.7.0",
+    "validator": "^13.6.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.15.7",
+    "@babel/core": "^7.15.8",
+    "@babel/node": "^7.15.8",
+    "@babel/preset-env": "^7.15.8",
+    "@babel/preset-typescript": "^7.15.0",
+    "@types/babel__core": "^7.1.16",
+    "@types/babel__preset-env": "^7.9.2",
+    "nodemon": "^2.0.14",
+    "npm-run-all": "^4.1.5",
+    "rimraf": "^3.0.2"
+  }
+}
