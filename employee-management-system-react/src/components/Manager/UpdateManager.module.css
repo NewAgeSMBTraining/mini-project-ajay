@@ -1,0 +1,48 @@
+.container {
+  padding: 50px;
+}
+
+.container form {
+  display: grid;
+  gap: 20px;
+}
+
+.container form .title {
+  font-weight: 600;
+}
+
+.container form .block {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.container form .item {
+  display: inline-flex;
+  gap: 0px 10px;
+  align-items: center;
+}
+
+.container form .item label {
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.container form .item select {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container form .item input {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container form .block2 {
+  display: grid;
+  gap: 30px;
+}

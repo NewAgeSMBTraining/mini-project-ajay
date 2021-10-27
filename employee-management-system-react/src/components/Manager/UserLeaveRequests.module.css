@@ -1,0 +1,79 @@
+.container {
+  padding: 50px;
+}
+
+.container .filters {
+  display: inline-flex;
+  gap: 0 30px;
+  align-items: center;
+  padding: 20px 0px;
+}
+
+.container .filters .item {
+  display: inline-flex;
+  gap: 0px 10px;
+ align-items: center;
+}
+
+.container input {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container select {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container .heading {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  padding: 10px 0px;
+  text-align: center;
+}
+
+.container .nothing {
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.container .item {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(6, 1fr);
+}
+
+.container .item .value {
+  text-transform: capitalize;
+}
+
+.container .item .email,
+.value {
+  padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: grid;
+  align-content: center;
+
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.container .item .rejected {
+  background-color: rgb(168, 59, 59);
+  color: white;
+}
+
+.container .item .approved {
+  background-color: rgb(36, 143, 107);
+  color: white;
+}
+
+.container .item .pending {
+  background-color: rgb(231, 231, 231);
+}

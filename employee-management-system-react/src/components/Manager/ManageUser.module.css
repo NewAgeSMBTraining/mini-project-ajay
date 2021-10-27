@@ -1,0 +1,145 @@
+.container {
+  padding: 50px;
+  position: relative;
+}
+
+.container .searchItem {
+  display: inline-flex;
+  gap: 0px 10px;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.container input {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container select {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container .heading {
+  background-color: rgb(0, 0, 0);
+  color: white;
+  padding: 10px 0px;
+  text-align: center;
+  text-transform: capitalize;
+}
+
+.container .nothing {
+  text-align: center;
+  padding: 20px;
+  font-weight: 500;
+  opacity: 0.7;
+}
+
+.container .item {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: repeat(6, 1fr);
+  position: relative;
+}
+
+.container .item .value {
+  text-transform: capitalize;
+  text-align: start;
+}
+
+.container .item .email,
+.value {
+  padding: 10px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+  display: grid;
+  align-content: center;
+
+  font-weight: 500;
+  color: rgba(0, 0, 0, 0.8);
+}
+
+.container .item .actionItem {
+  display: grid;
+  grid-auto-flow: column;
+  gap: 0px 10px;
+}
+
+.container .item .actionItem button {
+  font-size: 15px;
+  color: white;
+  font-weight: 500;
+}
+
+.container .item .actionItem button:hover {
+  transform: scale(1);
+}
+
+.container .item .actionItem .green {
+  background-color: rgb(48, 141, 48);
+}
+
+.container .item .actionItem .blue {
+  background-color: rgb(28, 113, 224);
+}
+
+.container .item .rejected {
+  background-color: rgb(168, 59, 59);
+  color: white;
+}
+
+.container .item .approved {
+  background-color: rgb(36, 143, 107);
+  color: white;
+}
+
+.container .item .pending {
+  background-color: rgb(231, 231, 231);
+}
+
+.container .item .configure {
+  display: flex;
+  flex-direction: column;
+  place-content: center;
+  gap: 2px;
+  cursor: pointer;
+}
+
+.container .item .configure .dot {
+  width: 5px;
+  height: 5px;
+  background-color: rgba(143, 143, 143, 0.8);
+  border-radius: 100%;
+}
+
+.popup {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 1;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.popup .content {
+  position: relative;
+  width: 90%;
+  background-color: white;
+  box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin: 20px;
+  max-height: 90%;
+  overflow-y: scroll;
+}
+
+.popup .content .actions {
+  color: red;
+  display: grid;
+  justify-content: flex-end;
+  cursor: pointer;
+  font-weight: 500;
+}

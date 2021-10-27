@@ -1,0 +1,50 @@
+.container {
+  position: absolute;
+  background-color: rgba(255, 255, 255, 0.9);
+  z-index: 5;
+  height: 100%;
+  width: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.container .content {
+  position: relative;
+  width: 20%;
+  background-color: white;
+  box-shadow: 0px 0px 10px 10px rgba(0, 0, 0, 0.05);
+  padding: 20px;
+  margin: 20px;
+  max-height: 90%;
+  display: grid;
+  gap: 20px;
+  border-radius: 8px;
+}
+
+.container .content .summary {
+  font-size: 20px;
+}
+
+.container .content .actions {
+  color: red;
+  display: inline-flex;
+  cursor: pointer;
+  font-weight: 500;
+  justify-content: flex-end;
+  gap: 0px 10px;
+}
+
+.container .content .actions button {
+  padding: 10px 20px;
+  font-size: 15px;
+  color: white;
+  font-weight: bold;
+}
+
+.container .content .actions .yes {
+  background-color: rgb(216, 38, 38);
+}
+
+.container .content .actions .no {
+  background-color: rgb(39, 201, 66);
+}
