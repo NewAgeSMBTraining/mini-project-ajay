@@ -1,16 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { HTTP } from "../../packages/axios";
 import style from "./UserLeaveRequests.module.css";
 
 const UserLeaveRequests = (props) => {
   const [leaves, setLeaves] = useState([]);
 
-  const statusRef = useRef();
-  const fromRef = useRef();
-  const toRef = useRef();
-  const emailRef = useRef();
+  const [status, setStatus] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [email, setEmail] = useState("");
 
-  const filter = {
+  let filter = {
     skip: "",
     limit: "",
     email: "",
@@ -35,7 +35,7 @@ const UserLeaveRequests = (props) => {
         },
       });
 
-      setLeaves(response.data);
+      setLeaves(response.data.leaves);
     } catch (e) {
       if (e.response) alert(e.response.data.message);
       else if (e.message) alert(e.message);
@@ -53,10 +53,7 @@ const UserLeaveRequests = (props) => {
         },
       });
 
-      const _leaves = leaves.filter((le) => le.leaveId !== body.leaveId);
-
-      console.log(_leaves);
-      // setLeaves(_leaves);
+      fetchLeaveRequests(filter);
     } catch (e) {
       if (e.response) alert(e.response.data.message);
       else if (e.message) alert(e.message);
@@ -65,43 +62,71 @@ const UserLeaveRequests = (props) => {
 
   useEffect(() => {
     fetchLeaveRequests({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const statusFilterChangeHandler = (e) => {
-    filter["status"] = e.target.value;
-
+    setStatus(e.target.value);
+    filter = {
+      status: e.target.value,
+      email,
+      from,
+      to,
+      limit: "",
+      skip: "",
+    };
     fetchLeaveRequests(filter);
   };
 
   const fromFilterChangeHandler = (e) => {
-    filter["from"] = e.target.value;
-
+    setFrom(e.target.value);
+    filter = {
+      status,
+      email,
+      from: e.target.value,
+      to,
+      limit: "",
+      skip: "",
+    };
     fetchLeaveRequests(filter);
   };
 
   const toFilterChangeHandler = (e) => {
-    filter["to"] = e.target.value;
-
+    setTo(e.target.value);
+    filter = {
+      status,
+      email,
+      from,
+      to: e.target.value,
+      limit: "",
+      skip: "",
+    };
     fetchLeaveRequests(filter);
   };
 
   const emailFilterChangeHandler = (e) => {
-    filter["email"] = e.target.value;
-
+    setEmail(e.target.value);
+    filter = {
+      status,
+      email: e.target.value,
+      from,
+      to,
+      limit: "",
+      skip: "",
+    };
     fetchLeaveRequests(filter);
   };
 
   const statusChangeHandler = (e, uId, leaveId) => {
-    if (!e.target.value === "approved" || !e.target.value === "rejected")
-      return;
+    if (e.target.value === "approved" || e.target.value === "rejected") {
+      const body = {
+        uId: uId.toString().trim(),
+        leaveId: leaveId.toString().trim(),
+        status: e.target.value,
+      };
 
-    const body = {
-      uId: uId.toString().trim(),
-      leaveId: leaveId.toString().trim(),
-      status: e.target.value,
-    };
-
-    statusChanger(body);
+      statusChanger(body);
+    }
   };
 
   return (
@@ -113,7 +138,6 @@ const UserLeaveRequests = (props) => {
             name="status"
             id="status"
             onChange={statusFilterChangeHandler}
-            ref={statusRef}
           >
             <option value="pending">pending</option>
             <option value="approved">approved</option>
@@ -126,7 +150,6 @@ const UserLeaveRequests = (props) => {
             type="datetime-local"
             name="from"
             id="from"
-            ref={fromRef}
             onChange={fromFilterChangeHandler}
           />
           <div>-</div>
@@ -134,7 +157,6 @@ const UserLeaveRequests = (props) => {
             type="datetime-local"
             name="to"
             id="to"
-            ref={toRef}
             onChange={toFilterChangeHandler}
           />
         </div>
@@ -144,7 +166,6 @@ const UserLeaveRequests = (props) => {
             type="email"
             name="email"
             id="email"
-            ref={emailRef}
             onChange={emailFilterChangeHandler}
           />
         </div>
@@ -161,42 +182,40 @@ const UserLeaveRequests = (props) => {
       </div>
 
       {leaves.length > 0 &&
-        leaves.map((leavereq) =>
-          leavereq.leaveRequests.map((leave) => {
-            return (
-              <div key={leave._id} className={style["item"]}>
-                <div className={style["email"]}>{leavereq.email}</div>
-                <div className={style["value"]}>{leave.summary}</div>
-                <div className={style["value"]}> {leave.dateFrom}</div>
-                <div className={style["value"]}>{leave.dateTo}</div>
-                <div
-                  className={`
-                    ${style["value"]} ${
-                    leave.status === "approved"
-                      ? style["approved"]
-                      : leave.status === "rejected"
-                      ? style["rejected"]
-                      : style["pending"]
-                  }
-                    `}
-                >
-                  {leave.status}
-                </div>
-                <select
-                  className={style["value"]}
-                  name="decision"
-                  onChange={(e) => {
-                    statusChangeHandler(e, leavereq._id, leave._id);
-                  }}
-                >
-                  <option>---</option>
-                  <option>approved</option>
-                  <option>rejected</option>
-                </select>
+        leaves.map((leave) => {
+          return (
+            <div key={leave._id} className={style["item"]}>
+              <div className={style["email"]}>{leave.email}</div>
+              <div className={style["value"]}>{leave.summary}</div>
+              <div className={style["value"]}> {leave.dateFrom}</div>
+              <div className={style["value"]}>{leave.dateTo}</div>
+              <div
+                className={`
+                  ${style["value"]} ${
+                  leave.status === "approved"
+                    ? style["approved"]
+                    : leave.status === "rejected"
+                    ? style["rejected"]
+                    : style["pending"]
+                }
+                  `}
+              >
+                {leave.status}
               </div>
-            );
-          })
-        )}
+              <select
+                className={style["value"]}
+                name="decision"
+                onChange={(e) => {
+                  statusChangeHandler(e, leave.user, leave._id);
+                }}
+              >
+                <option value="---">---</option>
+                <option value="approved">approved</option>
+                <option value="rejected">rejected</option>
+              </select>
+            </div>
+          );
+        })}
       {!leaves.length && (
         <div className={style["nothing"]}>no requests to show!</div>
       )}

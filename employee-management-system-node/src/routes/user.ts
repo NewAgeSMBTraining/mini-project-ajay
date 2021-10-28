@@ -1,8 +1,9 @@
 import { Request, Response, Router } from "express";
-import User, { Leave, UserDocument } from "../models/user";
+import User, { UserDocument } from "../models/user";
 import validator from "validator";
 import { userAuth } from "../middlewares/auth";
 import bcrypt from "bcrypt";
+import Leave, { LeaveDocument } from "../models/leaves";
 
 const router = Router();
 
@@ -117,24 +118,20 @@ router.post("/leave", userAuth, async (req: Request, res: Response) => {
     const dateTo: Date = new Date(req.body.dateTo.trim());
     if (isNaN(dateFrom.getDate())) throw new Error("invalid date");
 
-    const leave: Leave = {
+    const leave: LeaveDocument = new Leave({
+      email: req.user.email,
       dateFrom: dateFrom,
       dateTo: dateTo,
       summary: req.body.summary.trim(),
-    };
+      user: req.user._id,
+    });
+
+    await leave.save();
 
     //add leave request
-    await User.findByIdAndUpdate(
-      req.user._id,
-      {
-        $push: {
-          leaveRequests: leave,
-        },
-      },
-      {
-        runValidators: true,
-      }
-    );
+
+    req.user.leaveRequests.push(leave._id);
+    await req.user.save();
 
     res.send();
   } catch (e: any) {

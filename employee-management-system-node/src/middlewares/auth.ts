@@ -13,7 +13,7 @@ export const userAuth: RequestHandler = async (req, res, next) => {
     const user: UserDocument | null = await User.findOne({
       _id: (<any>decoded)._id,
       "tokens.token": token,
-    });
+    }).populate("leaveRequests");
 
     if (!user) throw new Error("");
 

@@ -1,10 +1,11 @@
 import { Request, Response, Router } from "express";
-import User, { isLeaveStatus, LeaveStatus, UserDocument } from "../models/user";
+import User, { UserDocument } from "../models/user";
 import validator from "validator";
 import Manager, { ManagerDocument } from "../models/manager";
 import { managerAuth } from "../middlewares/auth";
 import sendEmail from "../helper/nodemailer";
 import bcrypt from "bcrypt";
+import Leave, { isLeaveStatus, LeaveDocument } from "../models/leaves";
 
 const router = Router();
 
@@ -376,14 +377,14 @@ router.get("/leaves", managerAuth, async (req: Request, res: Response) => {
     to = req.query.to.toString().trim();
 
   let filter: Object = {
-    "leaveRequests.status": status,
+    status,
   };
 
   if (email) filter = { email, ...filter };
 
   if (from && to) {
     filter = {
-      "leaveRequests.dateFrom": {
+      dateFrom: {
         $gte: new Date(from),
         $lte: new Date(to),
       },
@@ -391,14 +392,14 @@ router.get("/leaves", managerAuth, async (req: Request, res: Response) => {
     };
   } else if (from && !to) {
     filter = {
-      "leaveRequests.dateFrom": {
+      dateFrom: {
         $gte: new Date(from),
       },
       ...filter,
     };
   } else if (!from && to) {
     filter = {
-      "leaveRequests.dateFrom": {
+      dateFrom: {
         $lte: new Date(to),
       },
       ...filter,
@@ -406,15 +407,13 @@ router.get("/leaves", managerAuth, async (req: Request, res: Response) => {
   }
 
   try {
-    const leaves = await User.find(filter, {
-      email: 1,
-      leaveRequests: 1,
-      _id: 1,
-    })
-      .skip(skip)
-      .limit(limit);
+    const leaves = await Leave.find(filter).skip(skip).limit(limit);
 
-    res.json(leaves);
+    console.log(filter);
+
+    console.log(leaves);
+
+    res.json({ leaves });
   } catch (e: any) {
     res.status(400).json({ message: e.message });
   }
@@ -438,19 +437,15 @@ router.post(
 
       const leaveId: string = req.body.leaveId.toString().trim();
 
-      const user: UserDocument | null = await User.findOne({
-        _id: req.body.uId.toString().trim(),
-        "leaveRequests._id": leaveId,
+      const leave: LeaveDocument | null = await Leave.findOne({
+        _id: leaveId,
       });
 
-      if (!user) throw new Error();
+      if (!leave) throw new Error();
 
-      user.leaveRequests = user.leaveRequests.map((leave) => {
-        if ((<any>leave)._id == leaveId) leave.status = req.body.status;
-        return leave;
-      });
+      leave.status = req.body.status;
 
-      await user.save();
+      await leave.save();
 
       res.send();
     } catch (e: any) {

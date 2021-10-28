@@ -1,4 +1,4 @@
-import { Document, Model, model, Schema } from "mongoose";
+import { Document, Model, model, ObjectId, Schema } from "mongoose";
 import validator from "validator";
 import jwt from "jsonwebtoken";
 import bycrypt from "bcrypt";
@@ -9,17 +9,17 @@ export enum Gender {
   "transsexual",
 }
 
-export type LeaveStatus = "approved" | "rejected" | "pending";
+// export type LeaveStatus = "approved" | "rejected" | "pending";
 
-export const isLeaveStatus = (val: string): boolean =>
-  val === "approved" || val === "rejected" || val === "pending" ? true : false;
+// export const isLeaveStatus = (val: string): boolean =>
+//   val === "approved" || val === "rejected" || val === "pending" ? true : false;
 
-export interface Leave {
-  dateFrom: Date;
-  dateTo: Date;
-  summary: string;
-  status?: LeaveStatus;
-}
+// export interface Leave {
+//   dateFrom: Date;
+//   dateTo: Date;
+//   summary: string;
+//   status?: LeaveStatus;
+// }
 
 export interface UserDocument extends Document {
   firstName: string;
@@ -44,7 +44,7 @@ export interface UserDocument extends Document {
   ];
   workExperience: [{ company: string; role: string; year: string }];
   manager: string;
-  leaveRequests: Leave[];
+  leaveRequests: ObjectId[];
   blocked?: boolean;
   tokens?: { token: string }[];
   resetTokens?: { token: string }[];
@@ -202,32 +202,32 @@ const userSchema: Schema = new Schema({
     trim: true,
     type: String,
   },
-  leaveRequests: [
-    {
-      dateFrom: {
-        type: Date,
-        required: true,
-        trim: true,
-      },
-      dateTo: {
-        type: Date,
-        required: true,
-        trim: true,
-      },
-      summary: {
-        type: String,
-        required: true,
-        trim: true,
-      },
-      status: {
-        default: "pending",
-        type: String,
-        validate(value: any) {
-          if (!isLeaveStatus(value)) throw new Error("not a valid status");
-        },
-      },
-    },
-  ],
+  // leaveRequests: [
+  //   {
+  //     dateFrom: {
+  //       type: Date,
+  //       required: true,
+  //       trim: true,
+  //     },
+  //     dateTo: {
+  //       type: Date,
+  //       required: true,
+  //       trim: true,
+  //     },
+  //     summary: {
+  //       type: String,
+  //       required: true,
+  //       trim: true,
+  //     },
+  //     status: {
+  //       default: "pending",
+  //       type: String,
+  //       validate(value: any) {
+  //         if (!isLeaveStatus(value)) throw new Error("not a valid status");
+  //       },
+  //     },
+  //   },
+  // ],
   blocked: {
     default: false,
     type: Boolean,
@@ -246,6 +246,12 @@ const userSchema: Schema = new Schema({
         type: String,
         required: true,
       },
+    },
+  ],
+  leaveRequests: [
+    {
+      type: Schema.Types.ObjectId,
+      ref: "Leave",
     },
   ],
 });
