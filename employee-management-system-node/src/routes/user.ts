@@ -28,6 +28,8 @@ router.post("/login", async (req: Request, res: Response) => {
       req.body.password.toString().trim()
     );
 
+    if (user.blocked) throw new Error("unable to login");
+
     const token: string = await user.generateAuthToken();
 
     res.json({

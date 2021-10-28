@@ -14,6 +14,8 @@ const AddUser = (props) => {
   const phoneNumberRef = useRef();
   const addressRef = useRef();
 
+  const sendcredentialsRef = useRef();
+
   useEffect(() => {}, []);
 
   const onSubmitHandler = async (e) => {
@@ -185,11 +187,18 @@ const AddUser = (props) => {
 
     if (Object.keys(body).length)
       try {
-        await HTTP.post("/manager/user/add", body, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        await HTTP.post(
+          "/manager/user/add",
+          {
+            data: body,
+            sendcredentials: sendcredentialsRef.current.checked,
           },
-        });
+          {
+            headers: {
+              Authorization: `Bearer ${localStorage.getItem("token")}`,
+            },
+          }
+        );
 
         props.fetchUsers();
 
@@ -226,6 +235,15 @@ const AddUser = (props) => {
     <Fragment>
       {
         <div className={style["container"]}>
+          <div className={style["actions"]}>
+            <label htmlFor="sendcredentials">Send credentils</label>
+            <input
+              ref={sendcredentialsRef}
+              type="checkbox"
+              id="sendcredentials"
+              name="sendcredentials"
+            />
+          </div>
           <form onSubmit={onSubmitHandler}>
             <div className={style["title"]}>Basic</div>
             <div className={style["block"]}>

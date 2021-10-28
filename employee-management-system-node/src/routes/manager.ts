@@ -6,6 +6,7 @@ import { managerAuth } from "../middlewares/auth";
 import sendEmail from "../helper/nodemailer";
 import bcrypt from "bcrypt";
 import Leave, { isLeaveStatus, LeaveDocument } from "../models/leaves";
+import { throwStatement } from "@babel/types";
 
 const router = Router();
 
@@ -260,10 +261,28 @@ router.get("/user", managerAuth, async (req: Request, res: Response) => {
 
 //add user
 router.post("/user/add", managerAuth, async (req: Request, res: Response) => {
-  const user: UserDocument = new User(req.body);
+  const user: UserDocument = new User(req.body.data);
+
+  let sendcredentials = false;
+
+  if (req.body.sendcredentials && req.body.sendcredentials === true)
+    sendcredentials = true;
 
   try {
     await user.save();
+
+    if (sendcredentials) {
+      sendEmail(
+        req.body.data.email,
+        "Login Crdentials",
+        `Hai ${
+          req.body.data.firstName
+        }, here is your login credentials.[ 'username' : ${
+          req.body.data.email
+        } 'password' : ${req.body.data.password.trim()} ]`
+      );
+    }
+
     res.status(201).send();
   } catch (e: any) {
     console.log(e);

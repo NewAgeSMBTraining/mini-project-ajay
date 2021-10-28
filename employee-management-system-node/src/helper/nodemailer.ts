@@ -1,6 +1,6 @@
 import nodemailer from "nodemailer";
 
-const sendEmail = async (to: string, message: string) => {
+const sendEmail = async (to: string, title: string, message: string) => {
   try {
     let transporter = nodemailer.createTransport({
       host: "smtp.gmail.com",
@@ -15,7 +15,7 @@ const sendEmail = async (to: string, message: string) => {
     let info = await transporter.sendMail({
       from: `"Admin" ${process.env.GMAIL}`,
       to,
-      subject: "Reset Password",
+      subject: title,
       text: message,
     });
 

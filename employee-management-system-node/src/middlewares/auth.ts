@@ -17,6 +17,8 @@ export const userAuth: RequestHandler = async (req, res, next) => {
 
     if (!user) throw new Error("");
 
+    if (user.blocked) throw new Error("");
+
     req.user = user;
     req.token = token;
 

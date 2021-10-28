@@ -2,6 +2,17 @@
   padding: 50px;
 }
 
+.container .actions {
+  padding: 10px 0px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+
+.container .actions input {
+  cursor: pointer;
+}
+
 .container form {
   display: grid;
   gap: 20px;

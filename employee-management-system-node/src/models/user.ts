@@ -9,18 +9,6 @@ export enum Gender {
   "transsexual",
 }
 
-// export type LeaveStatus = "approved" | "rejected" | "pending";
-
-// export const isLeaveStatus = (val: string): boolean =>
-//   val === "approved" || val === "rejected" || val === "pending" ? true : false;
-
-// export interface Leave {
-//   dateFrom: Date;
-//   dateTo: Date;
-//   summary: string;
-//   status?: LeaveStatus;
-// }
-
 export interface UserDocument extends Document {
   firstName: string;
   lastName: string;
@@ -202,32 +190,7 @@ const userSchema: Schema = new Schema({
     trim: true,
     type: String,
   },
-  // leaveRequests: [
-  //   {
-  //     dateFrom: {
-  //       type: Date,
-  //       required: true,
-  //       trim: true,
-  //     },
-  //     dateTo: {
-  //       type: Date,
-  //       required: true,
-  //       trim: true,
-  //     },
-  //     summary: {
-  //       type: String,
-  //       required: true,
-  //       trim: true,
-  //     },
-  //     status: {
-  //       default: "pending",
-  //       type: String,
-  //       validate(value: any) {
-  //         if (!isLeaveStatus(value)) throw new Error("not a valid status");
-  //       },
-  //     },
-  //   },
-  // ],
+
   blocked: {
     default: false,
     type: Boolean,

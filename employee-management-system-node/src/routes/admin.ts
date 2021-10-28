@@ -36,6 +36,7 @@ router.post("/forgot_password", async (req: Request, res: Response) => {
 
       sendEmail(
         email,
+        "Reset Password",
         `Click this link to reset your password http://localhost:3001/#/reset_password/${encryptedToken}?account=${email}`
       );
 
@@ -49,6 +50,7 @@ router.post("/forgot_password", async (req: Request, res: Response) => {
 
       sendEmail(
         email,
+        "Reset Password",
         `Click this link to reset your password http://localhost:3001/#/reset_password/${encryptedToken}?account=${email}`
       );
 
