@@ -40,7 +40,8 @@ const User = (props) => {
     if (props.location.state && props.location.state.user)
       setUser(props.location.state.user);
     else fetchUser();
-  }, [props.location.state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [props.location]);
 
   const logoutHandler = async () => {
     try {

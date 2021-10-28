@@ -1,0 +1,90 @@
+.container {
+  padding: 50px;
+}
+
+.container form {
+  display: grid;
+  gap: 20px;
+}
+
+.container form .title {
+  font-weight: 600;
+  display: grid;
+  grid-auto-flow: column;
+  align-items: center;
+  align-content: center;
+}
+
+.container form .title button {
+  font-weight: 600;
+  justify-self: flex-end;
+  font-size: 15px;
+
+  display: grid;
+  place-content: center;
+  padding: 0;
+  width: 30px;
+  height: 30px;
+}
+
+.container form .block {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.container form .field {
+  display: grid;
+  grid-auto-flow: column;
+  grid-template-columns: auto 40px;
+  align-content: center;
+  align-items: center;
+}
+
+.container form .field .content {
+  display: inline-flex;
+  flex-wrap: wrap;
+  gap: 20px;
+}
+
+.container form .field .close {
+  font-weight: 600;
+  justify-self: flex-end;
+  align-self: center;
+  font-size: 12px;
+  color: rgb(219, 118, 118);
+  border-radius: 50%;
+  cursor: pointer;
+  display: grid;
+  place-content: center;
+}
+
+.container form .item {
+  display: inline-flex;
+  gap: 0px 10px;
+  align-items: center;
+}
+
+.container form .item label {
+  font-weight: 600;
+  opacity: 0.7;
+}
+
+.container form .item input {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container form .item select {
+  font-size: 18px;
+  padding: 10px;
+  box-shadow: 0px 0px 10px 4px rgba(0, 0, 0, 0.05);
+  border: none;
+}
+
+.container form .block2 {
+  display: grid;
+  gap: 30px;
+}

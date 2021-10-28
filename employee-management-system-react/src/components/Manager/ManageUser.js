@@ -1,16 +1,15 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { HTTP } from "../../packages/axios";
+import AddUser from "./AddUser";
 import EditUser from "./EditUser";
 import style from "./ManageUser.module.css";
 import ViewUser from "./ViewUser";
 
-const ManageUser = () => {
+const ManageUser = (props) => {
   const [users, setUsers] = useState([]);
   const [isPopUp, setIsPopUp] = useState(false);
   const [user, setUser] = useState(null);
-
-  const [isConfig, setIsConfig] = useState(false);
 
   const [actionIndex, setActionIndex] = useState(0);
 
@@ -92,19 +91,36 @@ const ManageUser = () => {
               {actionIndex === 1 && (
                 <EditUser user={user} fetchUsers={fetchUsers} />
               )}
+              {actionIndex === 3 && (
+                <AddUser
+                  fetchUsers={fetchUsers}
+                  closePopUp={closePopUp}
+                  manager={props.manager}
+                />
+              )}
             </div>
           </div>,
           document.getElementById("popup-root")
         )}
 
-      <div className={style["searchItem"]}>
-        <label htmlFor="search">Search User</label>{" "}
-        <input
-          type="text"
-          id="search"
-          name="search"
-          onChange={searchHandler}
-        ></input>
+      <div className={style["topactions"]}>
+        <div className={style["searchItem"]}>
+          <label htmlFor="search">Search User</label>{" "}
+          <input
+            type="text"
+            id="search"
+            name="search"
+            onChange={searchHandler}
+          ></input>
+        </div>
+        <button
+          onClick={() => {
+            setActionIndex(3);
+            openPopUp();
+          }}
+        >
+          Add User
+        </button>
       </div>
       <div className={`${style["item"]} ${style["heading"]}`}>
         <div>First Name</div>

@@ -119,24 +119,9 @@ router.patch("/edit", managerAuth, async (req: Request, res: Response) => {
 
     res.status(202).send();
   } catch (e: any) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ message: e.message });
   }
 });
-
-// //forgot password
-// router.post("/forgot_password", async (req: Request, res: Response) => {
-//   try {
-//     if (!req.body.email || !validator.isEmail(req.body.email.toString().trim()))
-//       throw new Error();
-//     const { status } = await sendEmail(req.body.email.toString().trim());
-
-//     if (!status) return res.status(500).json();
-
-//     res.send();
-//   } catch (e: any) {
-//     res.status(406).json();
-//   }
-// });
 
 /** manage users */
 
@@ -268,7 +253,7 @@ router.get("/user", managerAuth, async (req: Request, res: Response) => {
 
     res.json(results);
   } catch (e: any) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ message: e.message });
   }
 });
 
@@ -280,7 +265,8 @@ router.post("/user/add", managerAuth, async (req: Request, res: Response) => {
     await user.save();
     res.status(201).send();
   } catch (e: any) {
-    res.status(500).json({ error: e.message });
+    console.log(e);
+    res.status(500).json({ message: e.message });
   }
 });
 
@@ -331,7 +317,7 @@ router.patch(
 
       res.status(202).send();
     } catch (e: any) {
-      res.status(500).json({ error: e.message });
+      res.status(500).json({ message: e.message });
     }
   }
 );

@@ -38,10 +38,12 @@ const Manager = (props) => {
   };
 
   useEffect(() => {
+    fetchManager();
     if (props.location.state && props.location.state.manager)
       setManager(props.location.state.manager);
     else fetchManager();
-  }, [props.location.state]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history, props.location]);
 
   const logoutHandler = async () => {
     try {

@@ -3,11 +3,29 @@
   position: relative;
 }
 
-.container .searchItem {
+.container .topactions .searchItem {
   display: inline-flex;
   gap: 0px 10px;
   align-items: center;
   margin-bottom: 20px;
+}
+
+.container .topactions {
+  display: grid;
+  align-content: center;
+  grid-auto-flow: column;
+  align-items: center;
+}
+
+.container .topactions button {
+  justify-self: flex-end;
+  background-color: rgb(34, 65, 110);
+  text-transform: uppercase;
+  font-size: 18px;
+}
+
+.container .topactions button:hover {
+  transform: scale(1);
 }
 
 .container input {
