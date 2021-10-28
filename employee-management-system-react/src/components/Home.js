@@ -19,7 +19,7 @@ const Home = () => {
   const [pageIndex, setPageIndex] = useState(0);
 
   useEffect(() => {
-    if (localStorage.getItem("token").trim()) {
+    if (localStorage.getItem("token") && localStorage.getItem("token").trim()) {
       const validateToken = async () => {
         await HTTP.get("/user/validate", {
           headers: {
