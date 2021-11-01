@@ -144,7 +144,7 @@ router.post("/leave", userAuth, async (req: Request, res: Response) => {
   }
 });
 
-//apply for leave
+//notification for leave
 router.patch(
   "/leave/notifications",
   userAuth,
