@@ -8,6 +8,8 @@ export interface LeaveDocument extends Document {
   summary: string;
   status?: LeaveStatus;
   user: ObjectId;
+  manager: string;
+  notifications: boolean;
 }
 
 export type LeaveStatus = "approved" | "rejected" | "pending";
@@ -21,7 +23,6 @@ const leaveSchema: Schema = new Schema({
     required: true,
     trim: true,
     lowercase: true,
-    unique: true,
     validate(value: any) {
       if (!validator.isEmail(value.toString()))
         throw new Error("email is invalid");
@@ -49,10 +50,24 @@ const leaveSchema: Schema = new Schema({
       if (!isLeaveStatus(value)) throw new Error("not a valid status");
     },
   },
+  notifications: {
+    default: false,
+    type: Boolean,
+  },
   user: {
     type: Schema.Types.ObjectId,
     ref: "User",
     required: true,
+  },
+  manager: {
+    type: String,
+    required: true,
+    trim: true,
+    lowercase: true,
+    validate(value: any) {
+      if (!validator.isEmail(value.toString()))
+        throw new Error("email is invalid");
+    },
   },
 });
 

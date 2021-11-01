@@ -168,7 +168,7 @@ const UpdateUser = (props) => {
         });
         academicUpdateCount++;
       } else
-        _social.push({
+        _academicQualifications.push({
           degreeCertificate: academicQualifications.degreeCertificate,
           qualifications: academicQualifications.qualifications,
           institute: academicQualifications.institute,
@@ -390,6 +390,8 @@ const UpdateUser = (props) => {
             <button type="submit" id="update-submit">
               Update
             </button>
+            <div></div>
+            <div></div>
           </form>
         </div>
       )}

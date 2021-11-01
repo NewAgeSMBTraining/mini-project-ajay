@@ -5,6 +5,7 @@ import style from "./UpdateUser.module.css";
 const UserProfile = (props) => {
   const firstNameRef = useRef();
   const lastNameRef = useRef();
+  const emailRef = useRef();
   const roleRef = useRef();
   const dobRef = useRef(new Date());
   const genderRef = useRef();
@@ -18,6 +19,7 @@ const UserProfile = (props) => {
     if (props.user) {
       firstNameRef.current.value = props.user.firstName;
       lastNameRef.current.value = props.user.lastName;
+      emailRef.current.value = props.user.email;
       roleRef.current.value = props.user.role;
       genderRef.current.value = props.user.gender;
       dobRef.current.value = props.user.dob.slice(0, 10);
@@ -48,6 +50,10 @@ const UserProfile = (props) => {
               <div className={style["item"]}>
                 <label htmlFor="lastName">Last Name</label>{" "}
                 <input type="text" name="lastName" ref={lastNameRef} readOnly />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="email">Email</label>{" "}
+                <input type="text" name="email" ref={emailRef} readOnly />
               </div>
               <div className={style["item"]}>
                 <label htmlFor="role">Role</label>{" "}

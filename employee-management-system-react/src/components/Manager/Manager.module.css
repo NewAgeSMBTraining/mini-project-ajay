@@ -5,6 +5,11 @@
   height: 100%;
 }
 
+.container .content {
+  overflow-y: scroll;
+  height: inherit;
+}
+
 .container .sidebar {
   display: flex;
   width: 250px;

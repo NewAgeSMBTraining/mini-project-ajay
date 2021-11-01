@@ -7,15 +7,15 @@ import bycrypt from "bcrypt";
 
 const router = Router();
 
-// router.post("/add", async (req: Request, res: Response) => {
-//   try {
-//     const manager = new Manager(req.body);
-//     await manager.save();
-//     res.send(manager);
-//   } catch (e: any) {
-//     res.status(500).json({ message: e.message });
-//   }
-// });
+router.post("/add", async (req: Request, res: Response) => {
+  try {
+    const manager = new Manager(req.body);
+    await manager.save();
+    res.send(manager);
+  } catch (e: any) {
+    res.status(500).json({ message: e.message });
+  }
+});
 
 //forgot password
 router.post("/forgot_password", async (req: Request, res: Response) => {

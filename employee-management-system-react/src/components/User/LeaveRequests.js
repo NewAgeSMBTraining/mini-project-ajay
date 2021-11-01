@@ -1,6 +1,26 @@
+import { HTTP } from "../../packages/axios";
 import style from "./LeaveRequests.module.css";
 
 const LeaveRequests = (props) => {
+  const notificationsUpdateHandler = async (id, value) => {
+    try {
+      await HTTP.patch(
+        "/user/leave/notifications",
+        {
+          lId: id,
+          notifications: value,
+        },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+    } catch (e) {
+      alert("an error occured");
+    }
+  };
+
   return (
     <div className={style["container"]}>
       <div className={`${style["item"]} ${style["heading"]}`}>
@@ -8,6 +28,7 @@ const LeaveRequests = (props) => {
         <div>Date From</div>
         <div>Date To</div>
         <div>Status</div>
+        <div>Options</div>
       </div>
       {!props.user.leaveRequests.length && (
         <div className={style["nothing"]}>no leave requests to show.</div>
@@ -31,6 +52,16 @@ const LeaveRequests = (props) => {
                     `}
               >
                 {item.status}
+              </div>
+              <div className={style["value"]}>
+                <label>notifications</label>
+                <input
+                  type="checkbox"
+                  defaultChecked={item.notifications}
+                  onChange={(e) => {
+                    notificationsUpdateHandler(item._id, e.target.checked);
+                  }}
+                />
               </div>
             </div>
           );

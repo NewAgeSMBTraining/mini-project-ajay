@@ -4,6 +4,7 @@ import validator from "validator";
 import { userAuth } from "../middlewares/auth";
 import bcrypt from "bcrypt";
 import Leave, { LeaveDocument } from "../models/leaves";
+import Manager from "../models/manager";
 
 const router = Router();
 
@@ -126,6 +127,7 @@ router.post("/leave", userAuth, async (req: Request, res: Response) => {
       dateTo: dateTo,
       summary: req.body.summary.trim(),
       user: req.user._id,
+      manager: req.user.manager,
     });
 
     await leave.save();
@@ -137,9 +139,42 @@ router.post("/leave", userAuth, async (req: Request, res: Response) => {
 
     res.send();
   } catch (e: any) {
+    console.log(e);
     res.status(500).json({ message: e.message });
   }
 });
+
+//apply for leave
+router.patch(
+  "/leave/notifications",
+  userAuth,
+  async (req: Request, res: Response) => {
+    console.log(req.body.notifications);
+
+    try {
+      if (!req.body.lId || !req.body.lId.trim())
+        throw new Error("invalid leave id");
+      if (typeof req.body.notifications !== "boolean")
+        throw new Error("invalid notification value");
+
+      const leave = await Leave.findOne({
+        user: req.user._id,
+        _id: req.body.lId,
+      });
+
+      if (!leave) throw new Error("can not find leave");
+
+      leave.notifications = req.body.notifications;
+
+      await leave.save();
+
+      res.send();
+    } catch (e: any) {
+      console.log(e);
+      res.status(500).json({ message: e.message });
+    }
+  }
+);
 
 //edit profile
 router.patch("/edit", userAuth, async (req: Request, res: Response) => {

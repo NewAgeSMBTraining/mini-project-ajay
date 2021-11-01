@@ -1,12 +1,11 @@
 import { Request, Response, Router } from "express";
 import User, { UserDocument } from "../models/user";
 import validator from "validator";
-import Manager, { ManagerDocument } from "../models/manager";
+import Manager, { ManagerDocument, ManagerModel } from "../models/manager";
 import { managerAuth } from "../middlewares/auth";
 import sendEmail from "../helper/nodemailer";
 import bcrypt from "bcrypt";
 import Leave, { isLeaveStatus, LeaveDocument } from "../models/leaves";
-import { throwStatement } from "@babel/types";
 
 const router = Router();
 
@@ -137,7 +136,9 @@ router.get("/users", managerAuth, async (req: Request, res: Response) => {
   if (req.query.limit && !isNaN(+req.query.limit)) limit = +req.query.limit;
 
   try {
-    const users = await User.find().skip(skip).limit(limit);
+    const users = await User.find({ manager: req.manager.email })
+      .skip(skip)
+      .limit(limit);
     res.json(users);
   } catch (e: any) {
     res.status(500).json({ message: e.message });
@@ -160,93 +161,98 @@ router.get("/user", managerAuth, async (req: Request, res: Response) => {
 
   try {
     const results = await User.find({
-      $or: [
-        search.split(" ").length > 1
-          ? {
-              $and: [
-                {
-                  firstName: {
-                    $regex: search.split(" ")[0],
-                    $options: "i",
-                  },
+      $and: [
+        { manager: req.manager.email },
+        {
+          $or: [
+            search.split(" ").length > 1
+              ? {
+                  $and: [
+                    {
+                      firstName: {
+                        $regex: search.split(" ")[0],
+                        $options: "i",
+                      },
+                    },
+                    {
+                      lastName: {
+                        $regex: search.split(" ")[1],
+                        $options: "i",
+                      },
+                    },
+                  ],
+                }
+              : {
+                  $or: [
+                    {
+                      firstName: {
+                        $regex: search,
+                        $options: "i",
+                      },
+                    },
+                    {
+                      lastName: {
+                        $regex: search,
+                        $options: "i",
+                      },
+                    },
+                  ],
                 },
-                {
-                  lastName: {
-                    $regex: search.split(" ")[1],
-                    $options: "i",
-                  },
-                },
-              ],
-            }
-          : {
-              $or: [
-                {
-                  firstName: {
-                    $regex: search,
-                    $options: "i",
-                  },
-                },
-                {
-                  lastName: {
-                    $regex: search,
-                    $options: "i",
-                  },
-                },
-              ],
+            {
+              email: {
+                $regex: search,
+                $options: "i",
+              },
             },
-        {
-          email: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          role: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          phoneNumber: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          address: {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          "academicQualifications.boardUniversity": {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          "academicQualifications.institute": {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          "academicQualifications.degreeCertificate": {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          "academicQualifications.qualifications": {
-            $regex: search,
-            $options: "i",
-          },
-        },
-        {
-          "workExperience.role": {
-            $regex: search,
-            $options: "i",
-          },
+            {
+              role: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              phoneNumber: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              address: {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              "academicQualifications.boardUniversity": {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              "academicQualifications.institute": {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              "academicQualifications.degreeCertificate": {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              "academicQualifications.qualifications": {
+                $regex: search,
+                $options: "i",
+              },
+            },
+            {
+              "workExperience.role": {
+                $regex: search,
+                $options: "i",
+              },
+            },
+          ],
         },
       ],
     })
@@ -396,6 +402,7 @@ router.get("/leaves", managerAuth, async (req: Request, res: Response) => {
     to = req.query.to.toString().trim();
 
   let filter: Object = {
+    manager: req.manager.email,
     status,
   };
 
@@ -465,6 +472,18 @@ router.post(
       leave.status = req.body.status;
 
       await leave.save();
+
+      if (leave.notifications) {
+        sendEmail(
+          leave.email,
+          "Leave Status",
+          `Hi, your leave request from ${leave.dateFrom} to ${
+            leave.dateTo
+          } has been ${req.body.status} by ${
+            req.manager.firstName + " " + req.manager.lastName
+          }`
+        );
+      }
 
       res.send();
     } catch (e: any) {

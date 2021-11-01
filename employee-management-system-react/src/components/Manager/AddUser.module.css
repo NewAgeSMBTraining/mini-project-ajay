@@ -50,6 +50,9 @@
   grid-template-columns: auto 40px;
   align-content: center;
   align-items: center;
+  background-color: honeydew;
+  padding: 10px;
+  border-radius: 5px;
 }
 
 .container form .field .content {

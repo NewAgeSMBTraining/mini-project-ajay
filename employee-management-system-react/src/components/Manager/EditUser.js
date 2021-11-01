@@ -11,9 +11,12 @@ const EditUser = (props) => {
   const genderRef = useRef();
   const phoneNumberRef = useRef();
   const addressRef = useRef();
-  const [social, setSocial] = useState([]);
-  const [academicQualifications, setAcademicQualifications] = useState([]);
-  const [workExperience, setWorkExperience] = useState([]);
+
+  const [socialFields, setSocialsFields] = useState([]);
+
+  const [academicFields, setAcademicFields] = useState([]);
+
+  const [experienceFields, setExperienceFields] = useState([]);
 
   useEffect(() => {
     if (props.user) {
@@ -25,9 +28,123 @@ const EditUser = (props) => {
       dobRef.current.value = props.user.dob.slice(0, 10);
       phoneNumberRef.current.value = props.user.phoneNumber;
       addressRef.current.value = props.user.address;
-      setSocial(props.user.social);
-      setAcademicQualifications(props.user.academicQualifications);
-      setWorkExperience(props.user.workExperience);
+
+      let _social = [];
+      props.user.social.forEach((e, i) => {
+        _social.push(
+          <Fragment>
+            <div className={style["content"]}>
+              <div className={style["item"]}>
+                <label htmlFor="title">{">> "}Title</label>
+                <input name="title" defaultValue={e.title} required />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="url">Link</label>
+                <input name="url" defaultValue={e.url} required />
+              </div>
+            </div>
+            {i !== 0 && (
+              <div
+                className={style["close"]}
+                onClick={socialFieldRemoveHandler}
+              >
+                remove
+              </div>
+            )}
+          </Fragment>
+        );
+      });
+      setSocialsFields(_social);
+
+      let _academic = [];
+      props.user.academicQualifications.forEach((e, i) => {
+        _academic.push(
+          <Fragment>
+            <div key={e._id} className={style["content"]}>
+              <div className={style["item"]}>
+                <label htmlFor="degree">{">> "}Degree/Certificate</label>
+                <input
+                  name="degree"
+                  defaultValue={e.degreeCertificate}
+                  required
+                />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="qualifications">Qualifications</label>
+                <input
+                  name="qualifications"
+                  defaultValue={e.qualifications}
+                  required
+                />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="institute">Institute</label>
+                <input name="institute" defaultValue={e.institute} required />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="boardUniversity">Board/University</label>
+                <input
+                  name="boardUniversity"
+                  defaultValue={e.boardUniversity}
+                  required
+                />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="year">Year</label>
+                <input name="year" defaultValue={e.year} required />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="percentageCgpa">Percentage/Cgpa</label>
+                <input
+                  name="percentageCgpa"
+                  defaultValue={e.percentageCgpa}
+                  required
+                />
+              </div>
+            </div>
+            {i !== 0 && (
+              <div
+                className={style["close"]}
+                onClick={academicFieldRemoveHandler}
+              >
+                remove
+              </div>
+            )}
+          </Fragment>
+        );
+      });
+      setAcademicFields(_academic);
+
+      let _experience = [];
+      props.user.workExperience.forEach((e, i) => {
+        _experience.push(
+          <Fragment>
+            <div key={e._id} className={style["content"]}>
+              <div className={style["item"]}>
+                <label htmlFor="company"> {">> "}Company</label>
+                <input name="company" defaultValue={e.company} required />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="role">Role</label>
+                <input name="role" defaultValue={e.role} required />
+              </div>
+              <div className={style["item"]}>
+                <label htmlFor="year">Year</label>
+                <input name="year" defaultValue={e.year} required />
+              </div>
+            </div>
+            {i !== 0 && (
+              <div
+                className={style["close"]}
+                onClick={experienceFieldRemoveHandler}
+              >
+                remove
+              </div>
+            )}
+          </Fragment>
+        );
+      });
+      setExperienceFields(_experience);
     }
   }, [props.user]);
 
@@ -114,19 +231,33 @@ const EditUser = (props) => {
     let _social = [],
       socialUpdateCount = 0;
 
-    for (let i = 0; i < social.length; i++) {
+    for (let i = 0; i < socialsParent.childNodes.length; i++) {
       const title =
-        socialsParent.childNodes[i].childNodes[0].childNodes[1].value.trim();
+        socialsParent.childNodes[
+          i
+        ].childNodes[0].childNodes[0].childNodes[1].value.trim();
       const url =
-        socialsParent.childNodes[i].childNodes[1].childNodes[1].value.trim();
+        socialsParent.childNodes[
+          i
+        ].childNodes[0].childNodes[1].childNodes[1].value.trim();
 
-      if (
-        (title && social[i].title !== title) ||
-        (url && social[i].url !== url)
-      ) {
+      if (props.user.social.length !== socialsParent.childNodes.length) {
         _social.push({ title, url });
         socialUpdateCount++;
-      } else _social.push({ title: social[i].title, url: social[i].url });
+      } else if (props.user.social[i]) {
+        if (
+          props.user.social[i].title !== title ||
+          props.user.social[i].url !== url
+        ) {
+          _social.push({ title, url });
+          socialUpdateCount++;
+        } else {
+          _social.push({
+            title,
+            url,
+          });
+        }
+      }
     }
 
     if (socialUpdateCount > 0)
@@ -143,31 +274,35 @@ const EditUser = (props) => {
     let _academicQualifications = [],
       academicUpdateCount = 0;
 
-    for (let i = 0; i < academicQualifications.length; i++) {
+    for (let i = 0; i < academicParent.childNodes.length; i++) {
       const degreeCertificate =
-        academicParent.childNodes[i].childNodes[0].childNodes[1].value.trim();
+        academicParent.childNodes[
+          i
+        ].childNodes[0].childNodes[0].childNodes[1].value.trim();
       const qualifications =
-        academicParent.childNodes[i].childNodes[1].childNodes[1].value.trim();
+        academicParent.childNodes[
+          i
+        ].childNodes[0].childNodes[1].childNodes[1].value.trim();
       const institute =
-        academicParent.childNodes[i].childNodes[2].childNodes[1].value.trim();
+        academicParent.childNodes[
+          i
+        ].childNodes[0].childNodes[2].childNodes[1].value.trim();
       const boardUniversity =
-        academicParent.childNodes[i].childNodes[3].childNodes[1].value.trim();
+        academicParent.childNodes[
+          i
+        ].childNodes[0].childNodes[3].childNodes[1].value.trim();
       const year =
-        academicParent.childNodes[i].childNodes[4].childNodes[1].value.trim();
+        academicParent.childNodes[
+          i
+        ].childNodes[0].childNodes[4].childNodes[1].value.trim();
       const percentageCgpa =
-        academicParent.childNodes[i].childNodes[5].childNodes[1].value.trim();
+        academicParent.childNodes[
+          i
+        ].childNodes[0].childNodes[5].childNodes[1].value.trim();
 
       if (
-        (degreeCertificate &&
-          academicQualifications[i].degreeCertificate !== degreeCertificate) ||
-        (qualifications &&
-          academicQualifications[i].qualifications !== qualifications) ||
-        (institute && academicQualifications[i].institute !== institute) ||
-        (boardUniversity &&
-          academicQualifications[i].boardUniversity !== boardUniversity) ||
-        (year && academicQualifications[i].year !== year) ||
-        (percentageCgpa &&
-          academicQualifications[i].percentageCgpa !== percentageCgpa)
+        props.user.academicQualifications.length !==
+        academicParent.childNodes.length
       ) {
         _academicQualifications.push({
           degreeCertificate,
@@ -178,15 +313,38 @@ const EditUser = (props) => {
           percentageCgpa,
         });
         academicUpdateCount++;
-      } else
-        _social.push({
-          degreeCertificate: academicQualifications.degreeCertificate,
-          qualifications: academicQualifications.qualifications,
-          institute: academicQualifications.institute,
-          boardUniversity: academicQualifications.boardUniversity,
-          year: academicQualifications.year,
-          percentageCgpa: academicQualifications.percentageCgpa,
-        });
+      } else if (props.user.academicQualifications[i]) {
+        if (
+          props.user.academicQualifications[i].degreeCertificate !==
+            degreeCertificate ||
+          props.user.academicQualifications[i].qualifications !==
+            qualifications ||
+          props.user.academicQualifications[i].institute !== institute ||
+          props.user.academicQualifications[i].boardUniversity !==
+            boardUniversity ||
+          props.user.academicQualifications[i].year !== year ||
+          props.user.academicQualifications[i].percentageCgpa !== percentageCgpa
+        ) {
+          _academicQualifications.push({
+            degreeCertificate,
+            qualifications,
+            institute,
+            boardUniversity,
+            year,
+            percentageCgpa,
+          });
+          academicUpdateCount++;
+        } else {
+          _academicQualifications.push({
+            degreeCertificate,
+            qualifications,
+            institute,
+            boardUniversity,
+            year,
+            percentageCgpa,
+          });
+        }
+      }
     }
 
     if (academicUpdateCount > 0)
@@ -203,27 +361,49 @@ const EditUser = (props) => {
     let _workExperience = [],
       experienceUpdateCount = 0;
 
-    for (let i = 0; i < workExperience.length; i++) {
+    for (let i = 0; i < experienceParent.childNodes.length; i++) {
       const company =
-        experienceParent.childNodes[i].childNodes[0].childNodes[1].value.trim();
+        experienceParent.childNodes[
+          i
+        ].childNodes[0].childNodes[0].childNodes[1].value.trim();
       const role =
-        experienceParent.childNodes[i].childNodes[1].childNodes[1].value.trim();
+        experienceParent.childNodes[
+          i
+        ].childNodes[0].childNodes[1].childNodes[1].value.trim();
       const year =
-        experienceParent.childNodes[i].childNodes[2].childNodes[1].value.trim();
+        experienceParent.childNodes[
+          i
+        ].childNodes[0].childNodes[2].childNodes[1].value.trim();
 
       if (
-        (company && workExperience[i].company !== company) ||
-        (role && workExperience[i].role !== role) ||
-        (year && workExperience[i].year !== year)
+        props.user.workExperience.length !== experienceParent.childNodes.length
       ) {
-        _workExperience.push({ company, role, year });
-        experienceUpdateCount++;
-      } else
         _workExperience.push({
-          company: workExperience[i].company,
-          role: workExperience[i].role,
-          year: workExperience[i].year,
+          company,
+          role,
+          year,
         });
+        experienceUpdateCount++;
+      } else if (props.user.workExperience[i]) {
+        if (
+          props.user.workExperience[i].company !== company ||
+          props.user.workExperience[i].role !== role ||
+          props.user.workExperience[i].year !== year
+        ) {
+          _workExperience.push({
+            company,
+            role,
+            year,
+          });
+          experienceUpdateCount++;
+        } else {
+          _workExperience.push({
+            company,
+            role,
+            year,
+          });
+        }
+      }
     }
 
     if (experienceUpdateCount > 0)
@@ -255,6 +435,119 @@ const EditUser = (props) => {
       }
 
     document.getElementById("update-submit").removeAttribute("disabled");
+  };
+
+  const socialFieldRemoveHandler = (e) => {
+    const parent = document.getElementById("social");
+
+    const el = document.getElementById(e.target.parentNode.id);
+    parent.removeChild(el);
+  };
+
+  const academicFieldRemoveHandler = (e) => {
+    const parent = document.getElementById("academic");
+
+    const el = document.getElementById(e.target.parentNode.id);
+    parent.removeChild(el);
+  };
+
+  const experienceFieldRemoveHandler = (e) => {
+    const parent = document.getElementById("experience");
+
+    const el = document.getElementById(e.target.parentNode.id);
+    parent.removeChild(el);
+  };
+
+  const socialFieldAddHandler = () => {
+    setSocialsFields((prevs) => {
+      return [
+        ...prevs,
+        <Fragment>
+          <div className={style["content"]}>
+            <div className={style["item"]}>
+              <label htmlFor="title">{">> "}Title</label>
+              <input name="title" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="url">Link</label>
+              <input name="url" required />
+            </div>
+          </div>
+          <div className={style["close"]} onClick={socialFieldRemoveHandler}>
+            remove
+          </div>
+        </Fragment>,
+      ];
+    });
+  };
+
+  const academicFieldAddHandler = () => {
+    setAcademicFields((prevs) => {
+      return [
+        ...prevs,
+        <Fragment>
+          <div className={style["content"]}>
+            <div className={style["item"]}>
+              <label htmlFor="degree">{">> "}Degree/Certificate</label>
+              <input name="degree" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="qualifications">Qualifications</label>
+              <input name="qualifications" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="institute">Institute</label>
+              <input name="institute" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="boardUniversity">Board/University</label>
+              <input name="boardUniversity" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="year">Year</label>
+              <input name="year" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="percentageCgpa">Percentage/Cgpa</label>
+              <input name="percentageCgpa" required />
+            </div>
+          </div>
+          <div className={style["close"]} onClick={academicFieldRemoveHandler}>
+            remove
+          </div>
+        </Fragment>,
+      ];
+    });
+  };
+
+  const experienceFieldAddHandler = () => {
+    setExperienceFields((prevs) => {
+      return [
+        ...prevs,
+        <Fragment>
+          <div className={style["content"]}>
+            <div className={style["item"]}>
+              <label htmlFor="company"> {">> "}Company</label>
+              <input name="company" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="role">Role</label>
+              <input name="role" required />
+            </div>
+            <div className={style["item"]}>
+              <label htmlFor="year">Year</label>
+              <input name="year" required />
+            </div>
+          </div>
+          <div
+            className={style["close"]}
+            onClick={experienceFieldRemoveHandler}
+          >
+            remove
+          </div>
+        </Fragment>,
+      ];
+    });
   };
 
   return (
@@ -312,93 +605,65 @@ const EditUser = (props) => {
                 <input type="text" name="address" ref={addressRef} required />
               </div>
             </div>
-            <div className={style["title"]}>Social</div>
+            <div className={style["title"]}>
+              <div>Social</div>
+              <button
+                title="add new social field"
+                onClick={() => {
+                  socialFieldAddHandler();
+                }}
+                type="button"
+              >
+                +
+              </button>
+            </div>
             <div className={style["block2"]} id="social">
-              {social.map((s, i) => {
+              {socialFields.map((el, i) => {
                 return (
-                  <div key={s._id} className={style["block"]}>
-                    <div className={style["item"]}>
-                      <label htmlFor="title">{">> "}Title</label>
-                      <input name="title" defaultValue={s.title} required />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="url">Link</label>
-                      <input name="url" defaultValue={s.url} required />
-                    </div>
+                  <div key={i} className={style["field"]} id={`social${i}`}>
+                    {el}
                   </div>
                 );
               })}
             </div>
-            <div className={style["title"]}>Academic Qualifications</div>
+            <div className={style["title"]}>
+              <div>Academic Qualifications </div>
+              <button
+                title="add new academic field"
+                onClick={() => {
+                  academicFieldAddHandler();
+                }}
+                type="button"
+              >
+                +
+              </button>
+            </div>
             <div className={style["block2"]} id="academic">
-              {academicQualifications.map((a, i) => {
+              {academicFields.map((el, i) => {
                 return (
-                  <div key={a._id} className={style["block"]}>
-                    <div className={style["item"]}>
-                      <label htmlFor="degree">{">> "}Degree/Certificate</label>
-                      <input
-                        name="degree"
-                        defaultValue={a.degreeCertificate}
-                        required
-                      />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="qualifications">Qualifications</label>
-                      <input
-                        name="qualifications"
-                        defaultValue={a.qualifications}
-                        required
-                      />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="institute">Institute</label>
-                      <input
-                        name="institute"
-                        defaultValue={a.institute}
-                        required
-                      />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="boardUniversity">Board/University</label>
-                      <input
-                        name="boardUniversity"
-                        defaultValue={a.boardUniversity}
-                        required
-                      />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="year">Year</label>
-                      <input name="year" defaultValue={a.year} required />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="percentageCgpa">Percentage/Cgpa</label>
-                      <input
-                        name="percentageCgpa"
-                        defaultValue={a.percentageCgpa}
-                        required
-                      />
-                    </div>
+                  <div key={i} className={style["field"]} id={`academic${i}`}>
+                    {el}
                   </div>
                 );
               })}
             </div>
-            <div className={style["title"]}>Work Experience</div>
+            <div className={style["title"]}>
+              <div>Work Experience </div>
+              <button
+                title="add new experience field"
+                onClick={() => {
+                  experienceFieldAddHandler();
+                }}
+                type="button"
+              >
+                +
+              </button>
+            </div>
             <div className={style["block2"]} id="experience">
-              {workExperience.map((e, i) => {
+              {experienceFields.map((el, i) => {
                 return (
-                  <div key={e._id} className={style["block"]}>
-                    <div className={style["item"]}>
-                      <label htmlFor="company"> {">> "}Company</label>
-                      <input name="company" defaultValue={e.company} required />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="role">Role</label>
-                      <input name="role" defaultValue={e.role} required />
-                    </div>
-                    <div className={style["item"]}>
-                      <label htmlFor="year">Year</label>
-                      <input name="year" defaultValue={e.year} required />
-                    </div>
+                  <div key={i} className={style["field"]} id={`experience${i}`}>
+                    {el}
                   </div>
                 );
               })}
