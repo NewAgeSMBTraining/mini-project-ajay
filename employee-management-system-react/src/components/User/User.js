@@ -26,7 +26,7 @@ const User = (props) => {
         throw new Error("an error occured while loading");
       setUser(response.data.user);
     } catch (e) {
-      if (e.response.data.message) {
+      if (e.response) {
         if (e.response.status === 401) {
           alert(e.response.data.message);
           return history.push("/");
@@ -57,7 +57,9 @@ const User = (props) => {
       unAuthorize();
       history.push("/");
     } catch (e) {
-      alert(e.response.data.message);
+      if (e.response) {
+        alert(e.response.data.message);
+      }
     }
   };
 

@@ -7,6 +7,7 @@ import bycrypt from "bcrypt";
 
 const router = Router();
 
+//add manager -for testing
 router.post("/add", async (req: Request, res: Response) => {
   try {
     const manager = new Manager(req.body);

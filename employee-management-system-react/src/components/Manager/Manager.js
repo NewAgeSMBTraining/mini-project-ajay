@@ -27,7 +27,7 @@ const Manager = (props) => {
         throw new Error("an error occured while loading");
       setManager(response.data.manager);
     } catch (e) {
-      if (e.response.data.message) {
+      if (e.response) {
         if (e.response.status === 401) {
           alert(e.response.data.message);
           return history.push("/");
@@ -59,7 +59,9 @@ const Manager = (props) => {
       unAuthorize();
       history.push("/");
     } catch (e) {
-      alert(e.response.data.message);
+      if (e.response) {
+        alert(e.response.data.message);
+      }
     }
   };
 
